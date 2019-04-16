@@ -11,6 +11,7 @@ import { stringify } from 'querystring';
   styleUrls: ['./issues.component.scss'],
   providers: [SearchService]
 })
+
 export class IssuesComponent implements OnInit {
 
   @Input() public issues: Issue[];
@@ -27,7 +28,7 @@ export class IssuesComponent implements OnInit {
   }
 
   showMoreResults() {
-    return (this.page % 3 === 0 && this.page * 30 < this.totalIssues);
+    return (this.issues.length === (this.page * this.issuesPerPage) && (this.page * this.issuesPerPage) < this.totalIssues);
   }
 
   loadMoreIssues() {
