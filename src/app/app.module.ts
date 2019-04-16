@@ -5,11 +5,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
 import { SearchService } from './services/search.service';
-import { SearchInputComponent } from './models/search-input/search-input.component';
-import { BasicInfoComponent } from './models/basic-info/basic-info.component';
-import { HomeComponent } from './models/home/home.component';
-import { IssuesComponent } from './models/issues/issues.component';
+import { SearchInputComponent } from './components/search-input/search-input.component';
+import { BasicInfoComponent } from './components/basic-info/basic-info.component';
+import { HomeComponent } from './components/home/home.component';
+import { IssuesComponent } from './components/issues/issues.component';
 import { HttpClientModule } from '@angular/common/http';
+import { LoaderComponent } from './components/loader/loader.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
   declarations: [
@@ -17,13 +19,15 @@ import { HttpClientModule } from '@angular/common/http';
     SearchInputComponent,
     BasicInfoComponent,
     HomeComponent,
-    IssuesComponent
+    IssuesComponent,
+    LoaderComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    NgxPaginationModule
   ],
   providers: [SearchService, HttpClientModule],
   bootstrap: [AppComponent]
