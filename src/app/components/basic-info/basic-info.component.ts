@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { SearchService } from '../../services/search.service';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { BasicInfo } from '../../models/basic-info/basic-info';
 
 @Component({
   selector: 'app-basic-info',
@@ -8,9 +8,16 @@ import { SearchService } from '../../services/search.service';
 })
 export class BasicInfoComponent implements OnInit {
 
-  constructor(private searchService: SearchService) { }
+  @Input() basicInfo: BasicInfo;
+  @Output() public onIssuesClicked = new EventEmitter<string>();
+
+  constructor() { }
 
   ngOnInit() {
+  }
+
+  getIssues() {
+    this.onIssuesClicked.emit();
   }
 
 }

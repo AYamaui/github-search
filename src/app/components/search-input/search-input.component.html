@@ -4,83 +4,9 @@
   </div>
   <div class="col-sm-1 pt-3">
     <span class="input-group">
-      <a href="#" (click)="getBasicInfo()">
+      <a href="#" (click)="sendRepositoryName()">
           <div [innerHTML]="searchIcon"></div>
       </a>
     </span>
   </div>
-</div>
-
-<div class="jumbotron basic-info-container border rounded-0">
-  <div *ngIf="basicInfo">
-    <h3 class="mb-5">{{ basicInfo.fullName }}</h3>
-    <div class="row">
-      <div class="col-md-4">
-        <h5>URL: </h5>
-      </div>
-      <div class="col-md-8">
-        <div><a href="{{ basicInfo.url }}">{{ basicInfo.url }}</a> </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-4">
-        <h5>Description: </h5>
-      </div>
-      <div class="col-md-8">
-        <div>{{ basicInfo.description }}</div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-4">
-        <h5>Forks: </h5>
-      </div>
-      <div class="col-md-8">
-        <div>{{ basicInfo.forks }}</div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-4">
-        <h5>Stargazers: </h5>
-      </div>
-      <div class="col-md-8">
-        <div>{{ basicInfo.stargazers }}</div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-4">
-        <h5>Open issues: </h5>
-      </div>
-      <div class="col-md-8">
-        <div><a href="#" (click)="getIssues()">{{ basicInfo.openIssues }}</a></div>
-      </div>
-      </div>
-    </div>
-    <div *ngIf="!basicInfo">
-      <img src="assets/img/github-icon.png" class="github-icon">
-    </div>
-  </div>
-
-<div *ngFor="let issue of issues | paginate: { itemsPerPage: issuesPerPage, currentPage: page }">
-  <nav class="navbar navbar-light mb-4 bg-light border">
-    <div class="row">
-      <div class="col-sm-2">
-        <span class="badge badge-success" *ngIf="issue.state == 'open'">Open</span>
-        <span class="badge badge-warning" *ngIf="issue.state == 'closed'">Closed</span>
-      </div>
-      <div class="col-sm-8">
-        <span class="navbar-brand h1">
-          <h4><a href="{{ issue.url }}" class="pull-left issue-title" data-toggle="tooltip" data-placement="right" title="{{ issue.title }}">{{ (issue.title.length>40)? (issue.title | slice:0:40)+'..':(issue.title) }}</a></h4>
-        </span>
-        <div><small class="text-muted">Last updated: {{ issue.updatedAt | date }}</small></div>
-      </div>
-      <div class="col-sm-2">
-        <a href="{{ issue.userUrl }}"><img src="{{ issue.userAvatarUrl }}" class="issue-user-avatar"></a>
-        <small class="text-muted">{{ issue.userLogin }}</small>
-      </div>
-    </div>
-  </nav>
-</div>
-
-<div *ngIf="issues.length > 0">
-  <pagination-controls (pageChange)="page = $event"></pagination-controls>
 </div>

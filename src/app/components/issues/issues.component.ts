@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { SearchService} from '../../services/search.service';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { SearchService } from '../../services/search/search.service';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { Issue } from '../../models/issue/issue';
+import { stringify } from 'querystring';
 
 @Component({
   selector: 'app-issues',
@@ -12,31 +13,25 @@ import { Issue } from '../../models/issue/issue';
 })
 export class IssuesComponent implements OnInit {
 
-  public issues: Issue[];
+  @Input() public issues: Issue[];
+  @Input() totalIssues: number;
+  @Output() public onLoadMoreIssues = new EventEmitter<string>();
+  public page: number;
+  public issuesPerPage: number;
 
   constructor(private searchService: SearchService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
-    this.issues = [];
+    this.page = 1;
+    this.issuesPerPage = 10;
   }
 
-  getIssues(repositoryFullName: string, repositoryId: string) {
-    // this.showLoader();
-
-    this.searchService.getIssues(repositoryFullName).subscribe((issues) => {
-      this.issues = issues;
-      console.log(this.issues);
-      console.log(this.issues[0].url);
-      this.goToIssuesPage(repositoryId);
-    });
+  showMoreResults() {
+    return (this.page % 3 === 0 && this.page * 30 < this.totalIssues);
   }
 
-  showLoader() {
-
-  }
-
-  hideLoader() {
-
+  loadMoreIssues() {
+    this.onLoadMoreIssues.emit(stringify(this.page));
   }
 
   goToIssuesPage(repositoryId) {
