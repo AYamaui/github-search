@@ -14,8 +14,14 @@ export class SearchService {
 
   constructor(private httpClient: HttpClient) { }
 
+  // Makes a HTTP request to the Github API to retrieve the basic info of the repository
+  // params:
+  //  repositoryName: string:
+  //   Repository name
+  // return: BasicInfo
+  //  A BasicInfo object containing the basic info of the repository
   getBasicInfo(repositoryName: string): Observable<BasicInfo> {
-    console.log(repositoryName);
+
     return this.httpClient.get(`https://api.github.com/search/repositories?q=${repositoryName}`).pipe(
       map( (resp) => {
         const firstItem = resp['items'][0];
@@ -36,7 +42,9 @@ export class SearchService {
             Number(firstItem.open_issues_count),
             firstItem.stargazers_url,
             Number(firstItem.stargazers_count),
-            firstItem.commits_url
+            firstItem.commits_url,
+            firstItem.owner.login,
+            firstItem.name
           );
         }
       }),
@@ -44,8 +52,15 @@ export class SearchService {
     );
   }
 
+  // Makes a HTTP request to the Github API to retrieve the issues
+  // params:
+  //  repositoryFullName: string:
+  //   Repository full name (owner/repository)
+  //  page: int
+  //   The next page of results to bring (every page contains 30 items)
+  // return: [Issue[], total_count]
+  //  An array containing the issues array and the total number of issues in the repository
   getIssues(repositoryFullName: string, page: number): Observable<any[]> {
-    console.log(`https://api.github.com/search/issues?q=repo:${repositoryFullName}`);
 
     return this.httpClient.get(`https://api.github.com/search/issues?q=repo:${repositoryFullName}
                                 &page=${page}&sort=updated&order=desc`).pipe(
@@ -71,8 +86,7 @@ export class SearchService {
 
   // Default error handling for all actions
   private handleError(error) {
-    const errorMessage = `An error occurred: ${error}`;
-    console.error(errorMessage);
+    const errorMessage = `An error occurred: ${error.error.message}`;
     return throwError(errorMessage);
   }
 }

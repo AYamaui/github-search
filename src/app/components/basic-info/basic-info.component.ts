@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { BasicInfo } from '../../models/basic-info/basic-info';
 
 @Component({
@@ -9,15 +9,11 @@ import { BasicInfo } from '../../models/basic-info/basic-info';
 export class BasicInfoComponent implements OnInit {
 
   @Input() basicInfo: BasicInfo;
-  @Output() public onIssuesClicked = new EventEmitter<string>();
 
   constructor() { }
 
   ngOnInit() {
-  }
 
-  getIssues() {
-    this.onIssuesClicked.emit();
   }
 
 }

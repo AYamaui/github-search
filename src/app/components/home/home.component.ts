@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { BasicInfo } from '../../models/basic-info/basic-info';
-import { Issue } from '../../models/issue/issue';
 import { SearchService } from '../../services/search/search.service';
 
+// Main component that contains the SearchInputComponent and the BasicInfoComponent
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -12,37 +12,24 @@ import { SearchService } from '../../services/search/search.service';
 export class HomeComponent implements OnInit {
 
   public repositoryName: string;
-  public repositoryFullName: string;
-  public repositoryId: number;
-  public basicInfo: BasicInfo;
-  public issues: Issue[];
-  public totalIssues: number;
-  public githubPage: number;
+  public repositoryFullName: string; // Repository full name (owner/repository)
+  public basicInfo: BasicInfo; // BasicInfo object that contains the repository basic information
 
   constructor(private searchService: SearchService) {
   }
 
   ngOnInit() {
-    this.issues = [];
-    this.githubPage = 0;
+    this.basicInfo = JSON.parse(localStorage.getItem('basicInfo'));
   }
 
+  // Retrieves the basic information from the SearchService and saves it into the basicInfo property
   getBasicInfo() {
 
     this.searchService.getBasicInfo(this.repositoryName).subscribe( (basicInfo) => {
       this.basicInfo = basicInfo;
-      this.repositoryId = basicInfo.id;
       this.repositoryFullName = basicInfo.fullName;
+      localStorage.setItem('basicInfo', JSON.stringify(this.basicInfo));
     });
+
   }
-
-  getIssues() {
-
-    this.searchService.getIssues(this.repositoryFullName, this.githubPage).subscribe(([issues, totalIssues]) => {
-      this.githubPage += 1;
-      this.issues = this.issues.concat(issues);
-      this.totalIssues = totalIssues;
-    });
-  }
-
 }

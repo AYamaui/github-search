@@ -43,12 +43,14 @@ describe('SearchService', () => {
     searchService = TestBed.get(SearchService);
   });
 
+  // Tests if the service is created correctly
   it('should be created', () => {
     const service: SearchService = TestBed.get(SearchService);
     expect(service).toBeTruthy();
   });
 
-  it('when the request is sent receive the basic information',
+  // Tests if the HTTP request retrieves the basic info correctly
+  it('should receive the basic information when the request is sent',
     () => {
 
       const mockBasicInfoResponse: object = {
@@ -69,20 +71,26 @@ describe('SearchService', () => {
         ]
       };
 
+      // HTTP request
       searchService.getBasicInfo( 'repositoryName' ).subscribe( ( searchResults: object ) => {
         expect(searchResults).toEqual(mockBasicInfoResponse);
       });
 
-
       // const req = httpTestingController.expectOne('https://api.github.com/search/repositories?q=repositoryName');
+      // // Assert that the request is a GET.
       // expect(req.request.method).toEqual('GET');
       //
+      // // Respond with mock data, causing Observable to resolve.
+      // // Subscribe callback asserts that correct data was returned.
       // req.flush(mockBasicInfoResponse);
+      //
+      // // Finally, assert that there are no outstanding requests.
       // httpTestingController.verify();
     }
   );
 
-  it('can test HttpClient.get', () => {
+  // Tests if the HTTP request retrieves the issues correctly
+  it('should receive the issues when the request is sent', async (() => {
     const mockIssuesResponse: object = {
         "total_count": 1,
         "items": [
@@ -104,15 +112,10 @@ describe('SearchService', () => {
       };
 
     // HTTP GET request
-    httpClient.get<object>('https://api.github.com/search/issues?q=repo:repositoryFullName&page=1&sort=updated&order=desc')
-      .subscribe(data =>
-        // When observable resolves, result should match test data
-        expect(data).toEqual(mockIssuesResponse)
-      );
+    searchService.getIssues( 'repositoryName', 1 ).subscribe( ( searchResults: object ) => {
+      expect(searchResults).toEqual(mockIssuesResponse);
+    });
 
-    // // The following `expectOne()` will match the request's URL.
-    // // If no requests or multiple requests matched that URL
-    // // `expectOne()` would throw.
     // const req = httpTestingController.
     //   expectOne('https://api.github.com/search/issues?q=repo:repositoryFullName&page=1&sort=updated&order=desc');
     //
@@ -125,5 +128,5 @@ describe('SearchService', () => {
     //
     // // Finally, assert that there are no outstanding requests.
     // httpTestingController.verify();
-  });
+  }));
 });

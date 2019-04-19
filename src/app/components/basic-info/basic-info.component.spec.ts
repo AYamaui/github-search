@@ -2,7 +2,14 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { BasicInfoComponent } from './basic-info.component';
 import { BasicInfo } from '../../models/basic-info/basic-info';
-import {By} from '@angular/platform-browser';
+import { By } from '@angular/platform-browser';
+import { RouterTestingModule } from '@angular/router/testing';
+import { AppRoutingModule } from '../../app-routing.module';
+import { HomeComponent } from '../home/home.component';
+import { SearchInputComponent } from '../search-input/search-input.component';
+import { IssuesComponent } from '../issues/issues.component';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { FormsModule } from '@angular/forms';
 
 describe('BasicInfoComponent', () => {
   let component: BasicInfoComponent;
@@ -10,7 +17,13 @@ describe('BasicInfoComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BasicInfoComponent ]
+      declarations: [ BasicInfoComponent, HomeComponent, IssuesComponent, SearchInputComponent ],
+      imports: [
+        RouterTestingModule,
+        AppRoutingModule,
+        NgxPaginationModule,
+        FormsModule
+      ]
     })
     .compileComponents();
   }));
@@ -32,15 +45,19 @@ describe('BasicInfoComponent', () => {
       'stargazersUrl',
       1,
       'commitsUrl',
+      'owner',
+      'name'
     );
 
     fixture.detectChanges();
   });
 
+  // Tests if the component is created successfully
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
+  // Tests if the basic info is displayed correctly
   it('should display basic info', () => {
 
     expect(fixture.debugElement.query(By.css('h3')).nativeElement.innerText).toEqual('fullName');
@@ -49,15 +66,10 @@ describe('BasicInfoComponent', () => {
     expect(fixture.nativeElement.querySelector('#forks').innerText).toEqual('1');
     expect(fixture.nativeElement.querySelector('#stargazers').innerText).toEqual( '1');
     expect(fixture.nativeElement.querySelector('#open-issues').innerText).toEqual('1');
+
   });
 
-  it('should call the function getIssues on click', () => {
-
-    spyOn(component.onIssuesClicked, 'emit');
-    fixture.debugElement.query(By.css('#get-issues-link')).triggerEventHandler('click', null);
-    expect(component.onIssuesClicked.emit).toHaveBeenCalled();
-  });
-
+  // Tests if a meesage is displayed when no repositories are found
   it('should display a message when no repositories are found', () => {
     component.basicInfo.repositories = 0;
     fixture.detectChanges();

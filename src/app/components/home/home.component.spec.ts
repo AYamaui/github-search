@@ -2,7 +2,6 @@ import {async, ComponentFixture, fakeAsync, inject, TestBed} from '@angular/core
 
 import { HomeComponent } from './home.component';
 import { BasicInfo } from '../../models/basic-info/basic-info';
-import { DebugElement } from '@angular/core';
 import { of } from 'rxjs';
 import { Issue } from '../../models/issue/issue';
 import { SearchService } from '../../services/search/search.service';
@@ -16,6 +15,7 @@ import { BrowserModule, By} from '@angular/platform-browser';
 import { AppRoutingModule } from '../../app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute } from '@angular/router';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -24,7 +24,8 @@ describe('HomeComponent', () => {
 
   beforeEach(async(() => {
 
-    let searchServiceStub = {
+    // SearchService stub
+    const searchServiceStub = {
       getBasicInfo: () => of(
         new BasicInfo(
           1,
@@ -38,7 +39,9 @@ describe('HomeComponent', () => {
           1,
           'stargazersUrl',
           1,
-          'commitsUrl'
+          'commitsUrl',
+          'owner',
+          'name'
         )
       ),
       getIssues: () => of(
@@ -59,7 +62,11 @@ describe('HomeComponent', () => {
 
     TestBed.configureTestingModule({
       declarations: [ HomeComponent, BasicInfoComponent, SearchInputComponent, IssuesComponent ],
-      providers: [ { provide: SearchService, useValue: searchServiceStub }, HttpClientModule ],
+      providers: [ {
+        provide: SearchService, useValue: searchServiceStub },
+        HttpClientModule,
+        { provide: ActivatedRoute, useValue: { params: of({ author: 'author', repositoryName: 'repositoryName' }), snapshot: {}}}
+      ],
       imports: [
         BrowserModule,
         AppRoutingModule,
@@ -81,11 +88,14 @@ describe('HomeComponent', () => {
     fixture.detectChanges();
   });
 
+  // Tests if the component was created correctly
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should receive basic info content from SearchService', async(() => {
+  // Tests if the basic information retrieved from the SearchService is correct and
+  // that is fetched after an event is triggered by the SearchInputComponent
+  it('should receive basic info content from SearchService', () => {
     const searchInputComponent = fixture.debugElement.query(By.directive(SearchInputComponent));
     searchInputComponent.triggerEventHandler('onNameTyped', 'repository');
 
@@ -103,62 +113,15 @@ describe('HomeComponent', () => {
           1,
           'stargazersUrl',
           1,
-          'commitsUrl'
+          'commitsUrl',
+          'owner',
+          'name'
         )
       );
     });
-  }));
+  });
 
-  it('should receive the issues from SearchService', async(() => {
-    spyOn(component, 'getIssues').and.callThrough();
-    const basicInfoComponent = fixture.debugElement.query(By.directive(BasicInfoComponent));
-    basicInfoComponent.triggerEventHandler('onIssuesClicked', {});
-
-    expect(component.getIssues).toHaveBeenCalled();
-
-    fixture.whenStable().then(() => {
-      expect(component.issues).toEqual(
-      [new Issue(
-          'url',
-          1,
-          'title',
-          'userUrl',
-          'state',
-          'createdAt',
-          'updatedAt',
-          'userLogin',
-          'description',
-          'userAvatarUrl',
-        )]
-      );
-    });
-  }));
-
-  it('should receive more issues from SearchService', async(() => {
-    spyOn(component, 'getIssues').and.callThrough();
-    const issuesComponent = fixture.debugElement.query(By.directive(IssuesComponent));
-    issuesComponent.triggerEventHandler('onLoadMoreIssues', {});
-
-    expect(component.getIssues).toHaveBeenCalled();
-
-    // fixture.whenStable().then(() => {
-    //   expect(component.issues).toEqual(
-    //   [new Issue(
-    //       'url',
-    //       1,
-    //       'title',
-    //       'userUrl',
-    //       'state',
-    //       'createdAt',
-    //       'updatedAt',
-    //       'userLogin',
-    //       'description',
-    //       'userAvatarUrl',
-    //     )]
-    //   );
-    // });
-  }));
-
+  // Tests if the repositoryName property is initialized properly with the value sent by the event triggered in SearchInputComponent
   it ('should initializes the repositoryName attribute after receiving it from SearchInputComponent', () => {
 
     const searchInputComponent = fixture.debugElement.query(By.directive(SearchInputComponent));
@@ -167,6 +130,8 @@ describe('HomeComponent', () => {
 
   });
 
+  // Tests that the getBasicInfo function is called, after the repositoryName property is initialized with the value
+  // coming from the event triggered by the SearchInputComponent
   it ('should call getBasicInfo() after receiving the repositoryName', async(() => {
     spyOn(component, 'getBasicInfo');
 

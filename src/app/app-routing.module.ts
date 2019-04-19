@@ -9,7 +9,7 @@ const routes: Routes = [
     component: HomeComponent
   },
   {
-    path: 'repositories/:repository_id/issues',
+    path: 'issues/:author/:repositoryName',
     component: IssuesComponent
   }
 ];

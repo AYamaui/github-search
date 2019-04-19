@@ -41,10 +41,12 @@ describe('SearchInputComponent', () => {
     fixture.detectChanges();
   });
 
+  // Tests if the component is created correctly
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
+  // Tests if an event is sent with the repository name when the repository name is typed
   it('should call the function sendRepositoryName on click', () => {
     spyOn(component.onNameTyped, 'emit');
     de.query(By.css('a')).triggerEventHandler('click', null);

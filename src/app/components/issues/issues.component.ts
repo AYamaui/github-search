@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SearchService } from '../../services/search/search.service';
 import { ActivatedRoute } from '@angular/router';
-import { Router } from '@angular/router';
 import { Issue } from '../../models/issue/issue';
 
+// Component that fetches and displays the issues associated to the repository
 @Component({
   selector: 'app-issues',
   templateUrl: './issues.component.html',
@@ -13,19 +13,33 @@ import { Issue } from '../../models/issue/issue';
 
 export class IssuesComponent implements OnInit {
 
-  @Input() public issues: Issue[];
-  @Input() totalIssues: number;
-  @Output() public onLoadMoreIssues = new EventEmitter<string>();
-  public page: number;
-  public issuesPerPage: number;
+  private githubPage: number; // The page of results to retrieve from the Github API
+  public  issues: Issue[]; // Issues array
+  public page: number; // Current page of the component pagination widget
+  public issuesPerPage: number; // Amount of issues that are displayed per page
+  public totalIssues: number; // Total number of issues existing in the repository
+  public repositoryFullName: string; // Full name of repository (owner/repository)
 
-  constructor(private searchService: SearchService, private route: ActivatedRoute, private router: Router) { }
+  constructor(private searchService: SearchService, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
+    this.issues = [];
     this.page = 1;
     this.issuesPerPage = 10;
+    this.githubPage = 0;
+
+    // Receives the owner and the name of the repository through route params
+    this.activatedRoute.params.subscribe(params => {
+       const author = params['author'];
+       const repositoryName = params['repositoryName'];
+       this.repositoryFullName = `${author}/${repositoryName}`;
+    });
+
+    // Initializes the issues array
+    this.getIssues();
   }
 
+  // Returns a boolean indicating if the 'Load more issues' button should be displayed.
   showMoreResults() {
 
     if (this.issues) {
@@ -33,12 +47,15 @@ export class IssuesComponent implements OnInit {
     }
   }
 
-  loadMoreIssues() {
-    this.onLoadMoreIssues.emit();
-  }
+  // Fetches the repository issues from the SearchService and concatenates the result to the existing issues array.
+  // Every time a batch of issues are retrieved the property githubPage increases in 1.
+  getIssues() {
 
-  goToIssuesPage(repositoryId) {
-    this.router.navigate([`repositories/${repositoryId}/issues`]);
+    this.searchService.getIssues(this.repositoryFullName, this.githubPage).subscribe(([issues, totalIssues]) => {
+      this.githubPage += 1;
+      this.issues = this.issues.concat(issues);
+      this.totalIssues = totalIssues;
+    });
   }
 
 }
