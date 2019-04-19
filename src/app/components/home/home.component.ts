@@ -13,7 +13,7 @@ export class HomeComponent implements OnInit {
 
   public repositoryName: string;
   public repositoryFullName: string;
-  public repositoryId: string;
+  public repositoryId: number;
   public basicInfo: BasicInfo;
   public issues: Issue[];
   public totalIssues: number;
@@ -38,7 +38,6 @@ export class HomeComponent implements OnInit {
 
   getIssues() {
 
-    console.log('getting issues');
     this.searchService.getIssues(this.repositoryFullName, this.githubPage).subscribe(([issues, totalIssues]) => {
       this.githubPage += 1;
       this.issues = this.issues.concat(issues);

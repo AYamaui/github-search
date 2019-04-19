@@ -2,7 +2,7 @@ export class Issue {
 
   constructor(
     public url: string,
-    public id: string,
+    public id: number,
     public title: string,
     public userUrl: string,
     public state: string,

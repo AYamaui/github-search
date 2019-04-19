@@ -1,9 +1,8 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SearchService } from '../../services/search/search.service';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { Issue } from '../../models/issue/issue';
-import { stringify } from 'querystring';
 
 @Component({
   selector: 'app-issues',
@@ -28,11 +27,14 @@ export class IssuesComponent implements OnInit {
   }
 
   showMoreResults() {
-    return (this.issues.length === (this.page * this.issuesPerPage) && (this.page * this.issuesPerPage) < this.totalIssues);
+
+    if (this.issues) {
+      return (this.issues.length === (this.page * this.issuesPerPage) && (this.page * this.issuesPerPage) < this.totalIssues);
+    }
   }
 
   loadMoreIssues() {
-    this.onLoadMoreIssues.emit(stringify(this.page));
+    this.onLoadMoreIssues.emit();
   }
 
   goToIssuesPage(repositoryId) {

@@ -20,22 +20,22 @@ export class SearchService {
       map( (resp) => {
         const firstItem = resp['items'][0];
 
-        if (resp['total_count'] === 0 || firstItem.name !== repositoryName) {
-          return new BasicInfo('0');
+        if (Number(resp['total_count']) === 0 || firstItem.name !== repositoryName) {
+          return new BasicInfo(0);
         } else {
 
           return new BasicInfo(
-            resp['total_count'],
-            firstItem.id,
+            Number(resp['total_count']),
+            Number(firstItem.id),
             firstItem.full_name,
             firstItem.html_url,
             firstItem.description,
             firstItem.forks_url,
-            firstItem.forks_count,
+            Number(firstItem.forks_count),
             firstItem.issue_events_url,
-            firstItem.open_issues_count,
+            Number(firstItem.open_issues_count),
             firstItem.stargazers_url,
-            firstItem.stargazers_count,
+            Number(firstItem.stargazers_count),
             firstItem.commits_url
           );
         }
@@ -53,7 +53,7 @@ export class SearchService {
         return [resp['items'].map(item => {
           return new Issue(
               item.url,
-              item.id,
+              Number(item.id),
               item.title,
               item.user.html_url,
               item.state,
