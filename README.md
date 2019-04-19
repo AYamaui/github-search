@@ -2,26 +2,64 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.8.
 
-## Development server
+This application allows to retrieve basic information about Github repositories. 
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Installation instructions:
 
-## Code scaffolding
+* Clone the repository
+```
+git clone https://github.com/AYamaui/github-search.git
+```
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+* Get into the directory
+```
+cd github-search
+```
 
-## Build
+* Install angular Command Line Interface (CLI)
+```
+npm install -g @angular/cli
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+* Install the pacakges:
+```
+npm-install
+```
+
+* Start a dev server. This command should automatically open a tab in the browser with the application, if that does not occur, navigate to `http://localhost:4200/`
+```
+ng serve --open
+```
+
+* Build the project
+```
+ng build
+```
+
+For production build use the `--prod` flag
+```
+ng build --prod
+```
 
 ## Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Type the following command in the console and a browser window with Karma will open to show all the tests
+```
+ng test
+```
 
-## Running end-to-end tests
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+## Steps to use the application
+In the main page there is an input where you can type a repository name. Clicking on the search icon or pressing the `Enter key` after typing the name, the basic information of the repository will be displayed.
+If no repository matches the search criteria, a message will be displayed.
 
-## Further help
+If the repository has issues, a link in the basic information box will be available to go to the separate Issues section, where a list of issues are displayed.
+* Every issue box contains the title of the issue (with a link to the github URL).
+* The status of the issue in shown in the left size with a green badge if it is open or an orange badge if it closed.
+* Under the title is the last date the issue was updated.
+* To the right it is the owner picture (with a link to his/her github profile).
+* The issues are paginated with 10 items in each page.
+* At the begining of the list there is a text that indicates how many issues are displayed out of the total issues in the repository.
+* The issues are loaded in batch of 30, if more issues are required, at the last page there will be a button to load more issues.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
