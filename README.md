@@ -23,7 +23,7 @@ npm install -g @angular/cli
 
 * Install the pacakges:
 ```
-npm-install
+npm install
 ```
 
 * Start a dev server. This command should automatically open a tab in the browser with the application, if that does not occur, navigate to `http://localhost:4200/`
