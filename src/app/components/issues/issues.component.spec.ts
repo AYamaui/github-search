@@ -4,7 +4,7 @@ import { IssuesComponent } from './issues.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { SearchService } from '../../services/search/search.service';
 import { HttpClientModule } from '@angular/common/http';
-import {Observable, of} from 'rxjs';
+import { of } from 'rxjs';
 import { BasicInfo } from '../../models/basic-info/basic-info';
 import { Issue } from '../../models/issue/issue';
 import { BrowserModule, By } from '@angular/platform-browser';
@@ -15,7 +15,6 @@ import { NgHttpLoaderModule } from 'ng-http-loader';
 import { HomeComponent } from '../home/home.component';
 import { SearchInputComponent } from '../search-input/search-input.component';
 import { BasicInfoComponent } from '../basic-info/basic-info.component';
-import { ActivatedRoute } from '@angular/router';
 
 describe('IssuesComponent', () => {
   let component: IssuesComponent;
@@ -63,7 +62,6 @@ describe('IssuesComponent', () => {
       declarations: [ IssuesComponent, HomeComponent, SearchInputComponent, BasicInfoComponent ],
       providers: [
         { provide: SearchService, useValue: searchServiceStub },
-        { provide: ActivatedRoute, useValue: { params: of({ author: 'author', repositoryName: 'repositoryName' })}},
         HttpClientModule
       ],
       imports: [
@@ -159,8 +157,6 @@ describe('IssuesComponent', () => {
   it('should receive issues from SearchService on init', () => {
     spyOn(component, 'getIssues');
     component.ngOnInit();
-
-    expect(component.repositoryFullName).toEqual('author/repositoryName');
 
     expect(component.getIssues).toHaveBeenCalled();
 
