@@ -39,10 +39,10 @@
       </div>
       <div class="col-md-8">
         <div id="open-issues">{{ basicInfo.openIssues }}</div>
-        <div *ngIf="basicInfo.openIssues > 0"><a href="#" id="get-issues-link" [routerLink]="['issues', basicInfo.owner, basicInfo.name]">
-          Se all issues
-          <svg xmlns="http://www.w3.org/2000/svg" width="8" height="16" viewBox="0 0 8 16"><path fill-rule="evenodd" d="M7.5 8l-5 5L1 11.5 4.75 8 1 4.5 2.5 3l5 5z"/></svg>
-        </a></div>
+        <div *ngIf="basicInfo.openIssues > 0"><button type="button" class="btn btn-outline-primary mt-3" id="get-issues-link" (click)="showIssues()">
+          See all issues
+          <svg xmlns="http://www.w3.org/2000/svg" width="10" height="16" viewBox="0 0 10 16"><path fill-rule="evenodd" d="M5 11L0 6l1.5-1.5L5 8.25 8.5 4.5 10 6l-5 5z"/></svg>
+        </button></div>
       </div>
     </div>
   </div>

@@ -2,13 +2,17 @@
   <div class="row">
     <div class="col-sm-2"></div>
     <div class="col-sm-8">
+      <div *ngIf="showAlert" class="alert alert-primary" role="alert">
+        There was an error with the Github API
+      </div>
       <div class="text-center">
         <h1>
           Search a Github repository!
         </h1>
       </div>
       <app-search-input (onNameTyped)="repositoryName=$event; getBasicInfo()"></app-search-input>
-      <app-basic-info [basicInfo]="basicInfo"></app-basic-info>
+      <app-basic-info [basicInfo]="basicInfo" (onIssuesClicked)="showIssues=$event"></app-basic-info>
+      <app-issues *ngIf="showIssues" [repositoryFullName]="repositoryFullName" (onAPIError)="showAlert=$event"></app-issues>
     </div>
     <div class="col-sm-2"></div>
   </div>
