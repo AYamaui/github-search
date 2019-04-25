@@ -10,8 +10,8 @@ describe('Issue', () => {
       'title',
       'userUrl',
       'state',
-      'createdAt',
-      'updatedAt',
+      new Date('2019-04-19T09:44:15+00:00'),
+      new Date('2019-04-19T09:44:15+00:00'),
       'userLogin',
       'description',
       'userAvatarUrl'

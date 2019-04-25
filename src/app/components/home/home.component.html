@@ -10,10 +10,23 @@
           Search a Github repository!
         </h1>
       </div>
-      <app-search-input (onNameTyped)="repositoryName=$event; getBasicInfo()"></app-search-input>
-      <app-basic-info [basicInfo]="basicInfo" (onIssuesClicked)="showIssues=$event"></app-basic-info>
-      <app-issues *ngIf="showIssues" [repositoryFullName]="repositoryFullName" (onAPIError)="showAlert=$event"></app-issues>
+      <app-search-input
+        (onNameTyped)="reset()"></app-search-input>
+      <app-basic-info
+        (onBasicInfoRetrieved)="setBasicInfo($event)"
+        (onIssuesClicked)="getIssues()">
+      </app-basic-info>
+      <app-statistics *ngIf="showStatistics()"
+                      [basicInfo]="basicInfo"
+                      [issues]="issues">
+      </app-statistics>
+      <app-issues *ngIf="initIssuesComponent"
+                  [repositoryFullName]="repositoryFullName"
+                  (onAPIError)="showAlert=$event"
+                  (onIssuesPopulated)="initIssues($event)">
+      </app-issues>
     </div>
     <div class="col-sm-2"></div>
   </div>
+
 </div>

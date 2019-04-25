@@ -12,6 +12,7 @@ import { IssuesComponent } from './components/issues/issues.component';
 import { HttpClientModule } from '@angular/common/http';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgHttpLoaderModule } from 'ng-http-loader';
+import { StatisticsComponent } from './components/statistics/statistics.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { NgHttpLoaderModule } from 'ng-http-loader';
     SearchInputComponent,
     BasicInfoComponent,
     HomeComponent,
-    IssuesComponent
+    IssuesComponent,
+    StatisticsComponent
   ],
   imports: [
     BrowserModule,

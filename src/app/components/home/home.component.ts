@@ -1,9 +1,11 @@
-import { Component, ComponentRef, OnInit } from '@angular/core';
+import { Component, ComponentRef, Input, OnInit } from '@angular/core';
 import { BasicInfo } from '../../models/basic-info/basic-info';
-import { SearchService } from '../../services/search/search.service';
 import { IssuesComponent } from '../issues/issues.component';
+import { Issue } from '../../models/issue/issue';
+import { StatisticsComponent } from '../statistics/statistics.component';
+import { SearchService } from '../../services/search/search.service';
 
-// Main component that contains the SearchInputComponent and the BasicInfoComponent
+// Main component that contains the interactions between the rest of the components
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -12,41 +14,77 @@ import { IssuesComponent } from '../issues/issues.component';
 
 export class HomeComponent implements OnInit {
 
-  public repositoryName: string;
-  public repositoryFullName: string; // Repository full name (owner/repository)
-  public basicInfo: BasicInfo; // BasicInfo object that contains the repository basic information
-  public showIssues: boolean; // Indicates if the issues list should be displayed
-  public showAlert: boolean; // Indicates if the alert widget should be displayed due to an error with the API call
   private issuesComponentRef: ComponentRef<IssuesComponent>; // Reference to IssuesComponent
+  private statisticsComponentRef: ComponentRef<StatisticsComponent>; // Reference to StatisticsComponent
+  public repositoryName: string;
+  public basicInfo: BasicInfo; // BasicInfo object that contains the repository basic information
+  public initIssuesComponent: boolean; // Indicates if the issues component should be started
+  public showAlert: boolean; // Indicates if the alert widget should be displayed due to an error with the API call
+  public repositoryFullName: string;
+
+  @Input() public issues: Issue[]; // Issues array
 
   constructor(private searchService: SearchService) {
+
+    // Subscribes to an observer to get the repository name
+    this.searchService.onNameTyped.subscribe( (repositoryName) => {
+      this.repositoryName = repositoryName;
+    });
   }
 
   ngOnInit() {
-    localStorage.removeItem('basicInfo');
-    sessionStorage.removeItem('basicInfo');
-    this.showIssues = false;
-    this.showAlert = false;
+    this.init();
   }
 
-  // Resets the variables and destroys the issues component instance
-  private reset() {
+  // Initializes the properties
+  private init() {
     this.showAlert = false;
-    this.showIssues = false;
+    this.initIssuesComponent = false;
+  }
+
+  // Resets the variables and destroys the issues and statistics components instances
+  public reset() {
+    this.init();
 
     if (this.issuesComponentRef) {
       this.issuesComponentRef.destroy();
     }
+
+    if (this.statisticsComponentRef) {
+      this.statisticsComponentRef.destroy();
+    }
   }
 
-  // Retrieves the basic information from the SearchService and saves it into the basicInfo property
-  getBasicInfo() {
-    this.reset();
+  /*
+    Sets the basicInfo and repositoryFullName properties
+    param basicInfo: BasicInfo
+      The BasicInfo object that contains the basic information of the repository
+   */
+  setBasicInfo(basicInfo) {
+    this.basicInfo = basicInfo;
+    this.repositoryFullName = this.basicInfo.fullName;
+  }
 
-    this.searchService.getBasicInfo(this.repositoryName).subscribe( (basicInfo) => {
-      this.basicInfo = basicInfo;
-      this.repositoryFullName = basicInfo.fullName;
-    });
+  /*
+    Initializes the issues array and the totalIssues properties
+    param eventContent: Array<any>
+      An array that contains the issues array and the total number of issues coming from the IssuesComponent on the onIssuesPopulated event
+   */
+  initIssues(eventContent) {
+    this.issues = eventContent[0];
+  }
 
+  // Makes true the flag that allows to initialize the IssuesComponent
+  getIssues() {
+    this.initIssuesComponent = true;
+  }
+
+  /*
+    Indicates if the charts should be displayed
+    return: boolean
+      Boolean that becomes true if the IssuesComponent is initialized, the issues array is defined and there is at least one issue
+   */
+  showStatistics() {
+    return (this.initIssuesComponent && this.issues && this.issues.length > 0);
   }
 }

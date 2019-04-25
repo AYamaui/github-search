@@ -5,6 +5,7 @@ import { Observable, pipe, throwError   } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Issue } from '../../models/issue/issue';
 import { BasicInfo } from '../../models/basic-info/basic-info';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -12,14 +13,18 @@ import { BasicInfo } from '../../models/basic-info/basic-info';
 
 export class SearchService {
 
+  private nameTyped = new BehaviorSubject<string>('');
+  onNameTyped = this.nameTyped.asObservable();
+
   constructor(private httpClient: HttpClient) { }
 
-  // Makes a HTTP request to the Github API to retrieve the basic info of the repository
-  // params:
-  //  repositoryName: string:
-  //   Repository name
-  // return: BasicInfo
-  //  A BasicInfo object containing the basic info of the repository
+  /*
+    Makes an HTTP request to the Github API to retrieve the basic info of the repository
+      param repositoryName: string
+        Repository name
+      return: BasicInfo
+        A BasicInfo object containing the basic info of the repository
+  */
   getBasicInfo(repositoryName: string): Observable<BasicInfo> {
 
     return this.httpClient.get(`https://api.github.com/search/repositories?q=${repositoryName}`).pipe(
@@ -52,36 +57,43 @@ export class SearchService {
     );
   }
 
-  // Makes a HTTP request to the Github API to retrieve the issues
-  // params:
-  //  repositoryFullName: string:
-  //   Repository full name (owner/repository)
-  //  page: int
-  //   The next page of results to bring (every page contains 30 items)
-  // return: [Issue[], total_count]
-  //  An array containing the issues array and the total number of issues in the repository
+  /*
+   Makes a HTTP request to the Github API to retrieve the issues
+    param repositoryFullName: string
+      Repository full name (owner/repository)
+    param page: int
+      The next page of results to bring (every page contains 30 items)
+    return: Observable<[Issue[], total_count:number]>
+     An array containing the issues array and the total number of issues in the repository
+  */
   getIssues(repositoryFullName: string, page: number): Observable<any[]> {
 
     return this.httpClient.get(`https://api.github.com/search/issues?q=repo:${repositoryFullName}
                                 &page=${page}&sort=updated&order=desc`).pipe(
       map((resp) => {
-        return [resp['items'].map(item => {
+        const result = [resp['items'].map(item => {
           return new Issue(
               item.url,
               Number(item.id),
               item.title,
               item.user.html_url,
               item.state,
-              item.created_at,
-              item.updated_at,
+              new Date(item.created_at),
+              new Date(item.updated_at),
               item.user.login,
               item.body,
               item.user.avatar_url,
           );
         }), resp['total_count']];
+
+        return result;
       }),
       catchError(this.handleError)
     );
+  }
+
+  updateRepositoryName(repositoryName) {
+    this.nameTyped.next(repositoryName);
   }
 
   // Default error handling for all actions
