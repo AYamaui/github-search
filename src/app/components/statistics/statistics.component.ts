@@ -86,7 +86,14 @@ export class StatisticsComponent implements OnInit, OnChanges {
     this.drawPieChart(containerId, slices, title);
   }
 
-  // TODO
+  /*
+    Aggregates the issues by date
+    param dateType: string
+      Type of date to aggregate by (could be createdAt or updatedAt)
+    return: Object
+      Object where the keys are the dates (months) where the issues were created/updated
+      and the values are the number of issues thar were created/updated in that month
+   */
   aggregateIssuesByDate(dateType) {
     const issuesAggregated = {};
 
@@ -107,7 +114,13 @@ export class StatisticsComponent implements OnInit, OnChanges {
     return issuesAggregated;
   }
 
-  // TODO
+  /* Sorts and extracts only the last 18 months of data
+    param issues: Object
+      Object where the keys are the dates (months) where the issues were created/updated
+      and the values are the number of issues thar were created/updated in that month
+    return: Array
+      An array of objects containing the date (key date) and the number of issues (key nIssues) created/updated in that date
+   */
   sortAndSlice(issues) {
 
     let issuesList: any[] = [];
@@ -129,7 +142,11 @@ export class StatisticsComponent implements OnInit, OnChanges {
 
   }
 
-  // TODO
+  /*
+    Formats the date of the issues to make it more readable
+    param issues: Array
+      An array of objects containing the date (key date) and the number of issues (key nIssues) created/updated in that date
+   */
   formatDate(issues) {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -139,7 +156,17 @@ export class StatisticsComponent implements OnInit, OnChanges {
 
   }
 
-  // TODO
+  /*
+    Draws a bar chart using d3 js library
+    param containerId: string
+      HTML contained id where the chart is going to drawn
+    param issues: Array
+      An array of objects containing the date (key date) and the number of issues (key nIssues) created/updated in that date
+    param title: string
+      Title of the chart
+    param fill: string
+      RGB color to fill the chart
+   */
   drawBarChart(containerId: string, issues: any[], title: string, fill: string) {
 
      // Domain labels (dates)
@@ -228,6 +255,15 @@ export class StatisticsComponent implements OnInit, OnChanges {
         });
   }
 
+  /*
+    Draws a pie chart using d3 js library
+    param containerId: string
+      HTML contained id where the chart is going to drawn
+    param slices: Array
+      An array of integers with the size of the partitions of the pie chart
+    param title: string
+      Title of the chart
+   */
   drawPieChart(containerId: string, slices: any, title: string) {
 
     // Dimensions
