@@ -11,20 +11,46 @@
         </h1>
       </div>
       <app-search-input
-        (onNameTyped)="reset()"></app-search-input>
-      <app-basic-info
-        (onBasicInfoRetrieved)="setBasicInfo($event)"
-        (onIssuesClicked)="getIssues()">
+        (onNameTyped)="reset()">
+      </app-search-input>
+
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link"
+             [ngClass]="{ 'active': currentTab === 'basic-info' }"
+             href="#"
+             (click)="changeTab('basic-info')">
+            Basic Information</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link"
+             [ngClass]="{ 'active': currentTab === 'issues', 'disabled': !initIssuesComponent }"
+             href="#"
+             (click)="changeTab('issues')">Issues</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link"
+             [ngClass]="{ 'active': currentTab === 'statistics', 'disabled': !initIssuesComponent }"
+             href="#"
+             (click)="changeTab('statistics')">Statistics</a>
+        </li>
+      </ul>
+
+
+      <app-basic-info [hidden]="currentTab !== 'basic-info'"
+                      (onBasicInfoRetrieved)="setBasicInfo($event)">
       </app-basic-info>
-      <app-statistics *ngIf="showStatistics()"
-                      [basicInfo]="basicInfo"
-                      [issues]="issues">
-      </app-statistics>
       <app-issues *ngIf="initIssuesComponent"
+                  [hidden]="currentTab !== 'issues'"
                   [repositoryFullName]="repositoryFullName"
                   (onAPIError)="showAlert=$event"
                   (onIssuesPopulated)="initIssues($event)">
       </app-issues>
+      <app-statistics *ngIf="showStatistics()"
+                      [hidden]="currentTab !== 'statistics'"
+                      [basicInfo]="basicInfo"
+                      [issues]="issues">
+      </app-statistics>
     </div>
     <div class="col-sm-2"></div>
   </div>

@@ -262,6 +262,13 @@ export class StatisticsComponent implements OnInit, OnChanges {
                             .innerRadius(0)
                             .outerRadius(radius);
 
+    // title
+    svg.append('text')
+        .attr('y', 0 - 200)
+        .attr('text-anchor', 'middle')
+        .style('font-size', '16px')
+        .text(title);
+
     // Builds the pie chart
     svg
       .selectAll('mySlices')

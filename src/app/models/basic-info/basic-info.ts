@@ -14,6 +14,7 @@ export class BasicInfo {
     public stargazers: number = null,
     public commitsUrl: string = null,
     public owner: string = null,
-    public name: string = null
+    public name: string = null,
+    public ownerAvatarUrl: string = null
   ) {}
 }

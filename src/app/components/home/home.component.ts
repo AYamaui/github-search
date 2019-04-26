@@ -20,7 +20,8 @@ export class HomeComponent implements OnInit {
   public basicInfo: BasicInfo; // BasicInfo object that contains the repository basic information
   public initIssuesComponent: boolean; // Indicates if the issues component should be started
   public showAlert: boolean; // Indicates if the alert widget should be displayed due to an error with the API call
-  public repositoryFullName: string;
+  public repositoryFullName: string; // Full name of repository (owner/repository)
+  public currentTab: string; // String that indicates which is the active tab
 
   @Input() public issues: Issue[]; // Issues array
 
@@ -40,6 +41,7 @@ export class HomeComponent implements OnInit {
   private init() {
     this.showAlert = false;
     this.initIssuesComponent = false;
+    this.currentTab = 'basic-info';
   }
 
   // Resets the variables and destroys the issues and statistics components instances
@@ -63,6 +65,7 @@ export class HomeComponent implements OnInit {
   setBasicInfo(basicInfo) {
     this.basicInfo = basicInfo;
     this.repositoryFullName = this.basicInfo.fullName;
+    this.getIssues();
   }
 
   /*
@@ -86,5 +89,14 @@ export class HomeComponent implements OnInit {
    */
   showStatistics() {
     return (this.initIssuesComponent && this.issues && this.issues.length > 0);
+  }
+
+  /*
+    Changes the tab depending of the option selected
+    param tab: string
+      Name of the selected tab
+   */
+  changeTab(tab) {
+    this.currentTab = tab;
   }
 }

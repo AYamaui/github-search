@@ -2,47 +2,51 @@
   <div *ngIf="basicInfo && basicInfo.repositories > 0">
     <h3 class="mb-5">{{ basicInfo.fullName }}</h3>
     <div class="row">
-      <div class="col-md-4">
-        <h5>URL: </h5>
+      <div class="col-md-3 pl-0">
+        <img src="{{ basicInfo.ownerAvatarUrl }}" class="issue-user-avatar">
+        <small class="text-muted" id="user-login-name">{{ basicInfo.owner }}</small>
       </div>
-      <div class="col-md-8">
-        <div id="url"><a href="{{ basicInfo.url }}">{{ basicInfo.url }}</a> </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-4">
-        <h5>Description: </h5>
-      </div>
-      <div class="col-md-8">
-        <div id="description">{{ basicInfo.description }}</div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-4">
-        <h5>Forks: </h5>
-      </div>
-      <div class="col-md-8">
-        <div id="forks">{{ basicInfo.forks }}</div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-4">
-        <h5>Stargazers: </h5>
-      </div>
-      <div class="col-md-8">
-        <div id="stargazers">{{ basicInfo.stargazers }}</div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-4">
-        <h5>Open issues: </h5>
-      </div>
-      <div class="col-md-8">
-        <div id="open-issues">{{ basicInfo.openIssues }}</div>
-        <div *ngIf="basicInfo.openIssues > 0"><button type="button" class="btn btn-outline-primary mt-3" id="get-issues-link" (click)="showIssues()">
-          See all issues
-          <svg xmlns="http://www.w3.org/2000/svg" width="10" height="16" viewBox="0 0 10 16"><path fill-rule="evenodd" d="M5 11L0 6l1.5-1.5L5 8.25 8.5 4.5 10 6l-5 5z"/></svg>
-        </button></div>
+      <div class="col-md-9">
+        <div class="row">
+          <div class="col-md-4">
+            <h5>URL: </h5>
+          </div>
+          <div class="col-md-8">
+            <div id="url"><a href="{{ basicInfo.url }}">{{ basicInfo.url }}</a> </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <h5>Description: </h5>
+          </div>
+          <div class="col-md-8">
+            <div id="description">{{ basicInfo.description }}</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <h5>Forks: </h5>
+          </div>
+          <div class="col-md-8">
+            <div id="forks">{{ basicInfo.forks }}</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <h5>Stargazers: </h5>
+          </div>
+          <div class="col-md-8">
+            <div id="stargazers">{{ basicInfo.stargazers }}</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <h5>Open issues: </h5>
+          </div>
+          <div class="col-md-8">
+            <div id="open-issues">{{ basicInfo.openIssues }}</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

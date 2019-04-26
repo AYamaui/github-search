@@ -41,11 +41,6 @@ export class BasicInfoComponent implements OnInit {
     });
   }
 
-  // Sends an event when the link to show the issues is clicked inside the basic info area
-  showIssues() {
-    this.onIssuesClicked.emit(true);
-  }
-
   // Sends the basic information with an event
   sendBasicInfo() {
     this.onBasicInfoRetrieved.emit(this.basicInfo);

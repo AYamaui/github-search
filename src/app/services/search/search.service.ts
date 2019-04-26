@@ -49,7 +49,8 @@ export class SearchService {
             Number(firstItem.stargazers_count),
             firstItem.commits_url,
             firstItem.owner.login,
-            firstItem.name
+            firstItem.name,
+            firstItem.owner.avatar_url
           );
         }
       }),
