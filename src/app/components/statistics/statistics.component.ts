@@ -12,7 +12,7 @@ import { BasicInfo } from '../../models/basic-info/basic-info';
 
 export class StatisticsComponent implements OnInit, OnChanges {
 
-  @Input() public issues: Issue[]; // Issues array
+  @Input() public issues: Issue[] = []; // Issues array
   @Input() public basicInfo: BasicInfo[]; // Repository basic info
 
   constructor() {}

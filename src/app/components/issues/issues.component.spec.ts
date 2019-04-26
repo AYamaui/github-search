@@ -15,6 +15,7 @@ import { NgHttpLoaderModule } from 'ng-http-loader';
 import { HomeComponent } from '../home/home.component';
 import { SearchInputComponent } from '../search-input/search-input.component';
 import { BasicInfoComponent } from '../basic-info/basic-info.component';
+import { StatisticsComponent } from '../statistics/statistics.component';
 
 describe('IssuesComponent', () => {
   let component: IssuesComponent;
@@ -59,7 +60,7 @@ describe('IssuesComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      declarations: [ IssuesComponent, HomeComponent, SearchInputComponent, BasicInfoComponent ],
+      declarations: [ IssuesComponent, HomeComponent, SearchInputComponent, BasicInfoComponent, StatisticsComponent ],
       providers: [
         { provide: SearchService, useValue: searchServiceStub },
         HttpClientModule
@@ -152,8 +153,10 @@ describe('IssuesComponent', () => {
     expect(component.getIssues).toHaveBeenCalled();
   });
 
-  // Tests if after the component starts the repositoryFullName property is set correctly, the function getIssues is called
-  // and that the content of the issues array is correct
+  /*
+   Tests if after the component is initialized the repositoryFullName property is set correctly, the function getIssues is called
+   and that the content of the issues array is correct
+   */
   it('should receive issues from SearchService on init', () => {
     spyOn(component, 'getIssues');
     component.ngOnInit();
@@ -178,8 +181,10 @@ describe('IssuesComponent', () => {
     });
   });
 
-  // Tests if another page of issues is retrieved successfully from the SearchService, when the 'Load more issues' button
-  // is cliked and that the content of the issues array is correct
+  /*
+    Tests if another page of issues is retrieved successfully from the SearchService when the 'Load more issues' button
+    is clicked and that the content of the issues array is correct
+  */
   it('should receive more issues from SearchService', () => {
     spyOn(component, 'getIssues').and.callThrough();
 

@@ -13,7 +13,6 @@ export class BasicInfoComponent implements OnInit {
   public repositoryName: string;
   public repositoryFullName: string;
 
-  @Output() public onIssuesClicked = new EventEmitter<boolean>(); // Event triggered when the link to show the issues is clicked
   @Output() public onBasicInfoRetrieved = new EventEmitter<BasicInfo>(); // Event triggered when the basic information is retrieved
 
   constructor(private searchService: SearchService) {

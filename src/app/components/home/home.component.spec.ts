@@ -16,6 +16,7 @@ import { AppRoutingModule } from '../../app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute } from '@angular/router';
+import { StatisticsComponent } from '../statistics/statistics.component';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -26,42 +27,14 @@ describe('HomeComponent', () => {
 
     // SearchService stub
     const searchServiceStub = {
-      getBasicInfo: () => of(
-        new BasicInfo(
-          1,
-          1,
-          'fullName',
-          'url',
-          'description',
-          'forksUrl',
-          1,
-          'issuesUrl',
-          1,
-          'stargazersUrl',
-          1,
-          'commitsUrl',
-          'owner',
-          'name'
-        )
-      ),
-      getIssues: () => of(
-        [[new Issue(
-          'url',
-          1,
-          'title',
-          'userUrl',
-          'state',
-          new Date('2019-04-19T09:44:15+00:00'),
-          new Date('2019-04-19T09:44:15+00:00'),
-          'userLogin',
-          'description',
-          'userAvatarUrl',
-        )], '10']
-      )
+      onNameTyped: {
+        subscribe: () => {}
+      },
+      updateRepositoryName: () => of('repositoryName')
     };
 
     TestBed.configureTestingModule({
-      declarations: [ HomeComponent, BasicInfoComponent, SearchInputComponent, IssuesComponent ],
+      declarations: [ HomeComponent, BasicInfoComponent, SearchInputComponent, IssuesComponent, StatisticsComponent ],
       providers: [ {
         provide: SearchService, useValue: searchServiceStub },
         HttpClientModule,
@@ -93,15 +66,23 @@ describe('HomeComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // Tests if the basic information retrieved from the SearchService is correct and
-  // that is fetched after an event is triggered by the SearchInputComponent
-  it('should receive basic info content from SearchService', () => {
-    const searchInputComponent = fixture.debugElement.query(By.directive(SearchInputComponent));
-    searchInputComponent.triggerEventHandler('onNameTyped', 'repository');
+  // Tests if the repositoryName property is populated after an update to the nameTyped subject
+  it('should populate repositoryName property', async(() => {
 
-    fixture.whenStable().then(() => {
-      expect(component.basicInfo).toEqual(
-      new BasicInfo(
+    spyOn(searchService, 'updateRepositoryName' );
+
+    searchService.onNameTyped.subscribe(  (repositoryName) => {
+      expect(component.repositoryName).toBeDefined();
+      expect(component.repositoryName).toEqual(repositoryName);
+    });
+  }));
+
+  /*
+    Tests if the basicInfo property is properly populated after the onBasicInfoRetrieved event is triggered and
+    that the flag to init IssuesComponent is set tu true
+   */
+  it('should populate basicInfo property and sets to true the flag to init IssuesComponent', () => {
+    const basicInfo = new BasicInfo(
           1,
           1,
           'fullName',
@@ -116,31 +97,97 @@ describe('HomeComponent', () => {
           'commitsUrl',
           'owner',
           'name'
-        )
-      );
-    });
-  });
-
-  // Tests if the repositoryName property is initialized properly with the value sent by the event triggered in SearchInputComponent
-  it ('should initializes the repositoryName attribute after receiving it from SearchInputComponent', () => {
-
-    const searchInputComponent = fixture.debugElement.query(By.directive(SearchInputComponent));
-    searchInputComponent.triggerEventHandler('onNameTyped', 'repository');
-    expect(component.repositoryName).toEqual('repository');
-
-  });
-
-  // Tests that the getBasicInfo function is called, after the repositoryName property is initialized with the value
-  // coming from the event triggered by the SearchInputComponent
-  it ('should call getBasicInfo() after receiving the repositoryName', async(() => {
-    spyOn(component, 'getBasicInfo');
-
-    const searchInputComponent = fixture.debugElement.query(By.directive(SearchInputComponent));
-    searchInputComponent.triggerEventHandler('onNameTyped', 'repository');
+    );
+    const basicInfoComponent = fixture.debugElement.query(By.directive(BasicInfoComponent));
+    basicInfoComponent.triggerEventHandler('onBasicInfoRetrieved', basicInfo);
 
     fixture.whenStable().then(() => {
-      expect(component.getBasicInfo).toHaveBeenCalled();
+      expect(component.setBasicInfo).toHaveBeenCalled();
+      expect(component.basicInfo).toEqual(basicInfo);
+      expect(component.getIssues).toHaveBeenCalled();
+      expect(component.initIssuesComponent).toBeTruthy();
     });
+  });
 
-  }));
+  // Tests if the changeTab() function adds the class 'active' to the right HTML tab
+  it('should add class active to the specified tab', () => {
+    spyOn(component, 'changeTab').and.callThrough();
+    component.ngOnInit();
+    component.initIssuesComponent = true;
+    component.changeTab('statistics');
+    fixture.detectChanges();
+
+    expect(fixture.debugElement.query(By.css('#statistics')).nativeElement
+      .getAttribute('class')).toContain('active');
+    expect(fixture.debugElement.query(By.css('#issues')).nativeElement
+      .getAttribute('class')).not.toContain('active');
+    expect(fixture.debugElement.query(By.css('#basic-info')).nativeElement
+      .getAttribute('class')).not.toContain('active');
+  });
+
+  // Tests if the issues property is properly populated with the content of the onIssuesPopulated event
+  it('should populate the issues property with the content of the onIssuesPopulated event', () => {
+    const issues = [
+      new Issue(
+        'url',
+        1,
+        'title',
+        'userUrl',
+        'state',
+        new Date('2019-04-19T09:44:15+00:00'),
+        new Date('2019-04-19T09:44:15+00:00'),
+        'userLogin',
+        'description',
+        'userAvatarUrl'
+      )
+    ];
+
+    const issuesComponent = fixture.debugElement.query(By.directive(IssuesComponent));
+    issuesComponent.triggerEventHandler('onIssuesPopulated', issues);
+
+    fixture.whenStable().then(() => {
+      expect(component.initIssues).toHaveBeenCalled();
+      expect(component.issues).toEqual(issues);
+    });
+  });
+
+  // Tests if the StatisticsComponent is initialized when the conditions are met
+  it('should set to true the flag to init the StatisticsComponent', () => {
+    const issues = [
+      new Issue(
+        'url',
+        1,
+        'title',
+        'userUrl',
+        'state',
+        new Date('2019-04-19T09:44:15+00:00'),
+        new Date('2019-04-19T09:44:15+00:00'),
+        'userLogin',
+        'description',
+        'userAvatarUrl'
+      )
+    ];
+
+    const issuesComponent = fixture.debugElement.query(By.directive(IssuesComponent));
+    issuesComponent.triggerEventHandler('onIssuesPopulated', issues);
+    component.initIssuesComponent = true;
+
+    fixture.detectChanges();
+
+    fixture.whenStable().then(() => {
+      expect(component.showStatistics()).toBeTruthy();
+    });
+  });
+
+  // Tests if the reset() function is called when receiving the event of onNameTyped and the Issues and Statistics components are removed
+  it('should call the reset() function on noNameTyped event and remove the Issues and Statistics components', () => {
+    const basicInfoComponent = fixture.debugElement.query(By.directive(BasicInfoComponent));
+    basicInfoComponent.triggerEventHandler('onNameTyped', {});
+
+    fixture.whenStable().then(() => {
+      expect(component.reset).toHaveBeenCalled();
+      expect(fixture.debugElement.query(By.directive(IssuesComponent))).not.toBeDefined();
+      expect(fixture.debugElement.query(By.directive(StatisticsComponent))).not.toBeDefined();
+    });
+  });
 });

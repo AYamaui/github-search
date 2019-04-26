@@ -28,7 +28,7 @@ export class SearchInputComponent implements OnInit {
 
   // Updates the repository name to extract the basic info and updated the shared repository name
   sendRepositoryName() {
-    this.onNameTyped.emit(this.repositoryName);
+    this.onNameTyped.emit();
     this.searchService.updateRepositoryName(this.repositoryName);
   }
 }

@@ -11,15 +11,18 @@ import { NgHttpLoaderModule } from 'ng-http-loader';
 import { HomeComponent } from '../home/home.component';
 import { IssuesComponent } from '../issues/issues.component';
 import { BasicInfoComponent } from '../basic-info/basic-info.component';
+import { StatisticsComponent } from '../statistics/statistics.component';
+import { SearchService } from '../../services/search/search.service';
 
 describe('SearchInputComponent', () => {
   let component: SearchInputComponent;
   let fixture: ComponentFixture<SearchInputComponent>;
   let de: DebugElement;
+  let searchService: SearchService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SearchInputComponent, HomeComponent, IssuesComponent, BasicInfoComponent ],
+      declarations: [ SearchInputComponent, HomeComponent, IssuesComponent, BasicInfoComponent, StatisticsComponent ],
       imports: [
         BrowserModule,
         AppRoutingModule,
@@ -28,7 +31,7 @@ describe('SearchInputComponent', () => {
         NgxPaginationModule,
         NgHttpLoaderModule.forRoot()
       ],
-      providers: [ HttpClientModule ]
+      providers: [ HttpClientModule, SearchService ]
     })
     .compileComponents();
   }));
@@ -37,6 +40,7 @@ describe('SearchInputComponent', () => {
     fixture = TestBed.createComponent(SearchInputComponent);
     component = fixture.componentInstance;
     de = fixture.debugElement;
+    searchService = TestBed.get(SearchService);
 
     fixture.detectChanges();
   });
@@ -46,11 +50,17 @@ describe('SearchInputComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // Tests if an event is sent with the repository name when the repository name is typed
-  it('should call the function sendRepositoryName on click', () => {
+  /*
+    Tests if an event is sent when the repository name is typed.
+    Additionally, the shared repositoryName variable is updated
+   */
+  it('should send an event when the repositoryName is introduced and update the BehaviourSubject ' +
+    'calling the updateRepositoryName function', () => {
     spyOn(component.onNameTyped, 'emit');
+    spyOn(searchService, 'updateRepositoryName').and.callThrough();
     de.query(By.css('a')).triggerEventHandler('click', null);
     expect(component.onNameTyped.emit).toHaveBeenCalled();
+    expect(searchService.updateRepositoryName).toHaveBeenCalled();
   });
 
 });

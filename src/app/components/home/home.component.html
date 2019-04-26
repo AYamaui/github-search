@@ -16,20 +16,20 @@
 
       <ul class="nav nav-tabs">
         <li class="nav-item">
-          <a class="nav-link"
+          <a class="nav-link" id="basic-info"
              [ngClass]="{ 'active': currentTab === 'basic-info' }"
              href="#"
              (click)="changeTab('basic-info')">
             Basic Information</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link"
+          <a class="nav-link" id="issues"
              [ngClass]="{ 'active': currentTab === 'issues', 'disabled': !initIssuesComponent }"
              href="#"
              (click)="changeTab('issues')">Issues</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link"
+          <a class="nav-link" id="statistics"
              [ngClass]="{ 'active': currentTab === 'statistics', 'disabled': !initIssuesComponent }"
              href="#"
              (click)="changeTab('statistics')">Statistics</a>

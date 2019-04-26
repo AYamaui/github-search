@@ -14,17 +14,18 @@ import { SearchInputComponent } from '../../components/search-input/search-input
 import { IssuesComponent } from '../../components/issues/issues.component';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { StatisticsComponent } from '../../components/statistics/statistics.component';
 
 describe('SearchService', () => {
 
   let httpClient: HttpClient;
   let httpTestingController: HttpTestingController;
-  let searchService: SearchService;
+  let service: SearchService;
 
   beforeEach(() => {
 
     TestBed.configureTestingModule({
-      declarations: [HomeComponent, BasicInfoComponent, SearchInputComponent, IssuesComponent],
+      declarations: [HomeComponent, BasicInfoComponent, SearchInputComponent, IssuesComponent, StatisticsComponent],
       imports: [
         BrowserModule,
         AppRoutingModule,
@@ -40,12 +41,11 @@ describe('SearchService', () => {
 
     httpClient = TestBed.get(HttpClient);
     httpTestingController = TestBed.get(HttpTestingController);
-    searchService = TestBed.get(SearchService);
+    service = TestBed.get(SearchService);
   });
 
   // Tests if the service is created correctly
   it('should be created', () => {
-    const service: SearchService = TestBed.get(SearchService);
     expect(service).toBeTruthy();
   });
 
@@ -72,7 +72,7 @@ describe('SearchService', () => {
       };
 
       // HTTP request
-      searchService.getBasicInfo( 'repositoryName' ).subscribe( ( searchResults: object ) => {
+      service.getBasicInfo( 'repositoryName' ).subscribe( ( searchResults: object ) => {
         expect(searchResults).toEqual(mockBasicInfoResponse);
       });
 
@@ -112,7 +112,7 @@ describe('SearchService', () => {
       };
 
     // HTTP GET request
-    searchService.getIssues( 'repositoryName', 1 ).subscribe( ( searchResults: object ) => {
+    service.getIssues( 'repositoryName', 1 ).subscribe( ( searchResults: object ) => {
       expect(searchResults).toEqual(mockIssuesResponse);
     });
 
