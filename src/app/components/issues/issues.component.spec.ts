@@ -25,24 +25,6 @@ describe('IssuesComponent', () => {
 
     // A SearchService Stub
     const searchServiceStub = {
-      getBasicInfo: () => of(
-        new BasicInfo(
-          1,
-          1,
-          'fullName',
-          'url',
-          'description',
-          'forksUrl',
-          1,
-          'issuesUrl',
-          1,
-          'stargazersUrl',
-          1,
-          'commitsUrl',
-          'owner',
-          'name'
-        )
-      ),
       getIssues: () => of(
         [[new Issue(
           'url',

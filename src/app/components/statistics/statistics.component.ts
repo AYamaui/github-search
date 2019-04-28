@@ -1,8 +1,8 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import * as d3 from 'd3';
-import * as d3_queue from 'd3-queue';
 import { Issue } from '../../models/issue/issue';
 import { BasicInfo } from '../../models/basic-info/basic-info';
+import {stringify} from 'querystring';
 
 @Component({
   selector: 'app-statistics',
@@ -12,8 +12,8 @@ import { BasicInfo } from '../../models/basic-info/basic-info';
 
 export class StatisticsComponent implements OnInit, OnChanges {
 
-  @Input() public issues: Issue[] = []; // Issues array
-  @Input() public basicInfo: BasicInfo[]; // Repository basic info
+  @Input() public issues: Issue[]; // Issues array
+  @Input() public basicInfo: BasicInfo; // Repository basic info
 
   constructor() {}
 
@@ -81,7 +81,9 @@ export class StatisticsComponent implements OnInit, OnChanges {
     d3.selectAll(containerId + ' svg').remove();
 
     // Builds teh slices of the pie for open and closed issues
-    const slices = { 'open issues': this.basicInfo['openIssues'], 'closed issues': (this.issues.length - this.basicInfo['openIssues']) };
+    const openIssues = this.issues.filter((issue) => issue.state === 'open').length;
+    const closedIssues = this.issues.filter((issue) => issue.state === 'closed').length;
+    const slices = { open: openIssues, closed: closedIssues };
 
     this.drawPieChart(containerId, slices, title);
   }
@@ -123,7 +125,7 @@ export class StatisticsComponent implements OnInit, OnChanges {
    */
   sortAndSlice(issues) {
 
-    let issuesList: any[] = [];
+    let issuesList: { date: Date, nIssues: number }[] = [];
 
     // Creates an array of objects
     d3.keys(issues).forEach((dt) => {
@@ -146,6 +148,8 @@ export class StatisticsComponent implements OnInit, OnChanges {
     Formats the date of the issues to make it more readable
     param issues: Array
       An array of objects containing the date (key date) and the number of issues (key nIssues) created/updated in that date
+    return: Array
+      The modified array with the formatted date
    */
   formatDate(issues) {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -153,6 +157,8 @@ export class StatisticsComponent implements OnInit, OnChanges {
     issues.map((item) => {
       item.date = (months[item.date.getMonth()] + ' ' + item.date.getFullYear());
     });
+
+    return issues;
 
   }
 
@@ -289,9 +295,9 @@ export class StatisticsComponent implements OnInit, OnChanges {
 
     // Computes the position of each group on the pie
     const pie = d3.pie()
-                  .value((d) => d.value );
+                  .value((d: any) => d.value );
 
-    const dataReady = pie(d3.entries(slices));
+    const dataReady = pie((d3.entries(slices) as any));
 
     // Builds arcs
     const arcGenerator = d3.arc()
@@ -311,11 +317,11 @@ export class StatisticsComponent implements OnInit, OnChanges {
       .data(dataReady)
       .enter()
       .append('path')
-        .attr('d', arcGenerator)
-        .attr('fill', (d) => (color(d.data.key)))
+        .attr('d', (arcGenerator as any))
+        .attr('fill', (d: any) => (color(d.data.key) as any))
         .attr('stroke', 'black')
         .style('stroke-width', '2px')
-        .style('opacity', 0.7)
+        .style('opacity', 0.7);
 
     // Annotations
     svg
@@ -323,8 +329,8 @@ export class StatisticsComponent implements OnInit, OnChanges {
       .data(dataReady)
       .enter()
       .append('text')
-      .text((d) => d.data.key)
-      .attr('transform', (d) => 'translate(' + arcGenerator.centroid(d) + ')')
+      .text((d: any) => d.data.key)
+      .attr('transform', (d: any) => 'translate(' + arcGenerator.centroid(d) + ')')
       .style('text-anchor', 'middle')
       .style('font-size', 17);
   }
